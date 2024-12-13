@@ -38,10 +38,10 @@ const buttonStyles = cva(
         ghost: "border-2 transition-colors duration-100",
       },
       size: {
-        sm: "px-3 py-2 gap-2 text-sm",
-        md: "px-4 py-2 gap-2 text-base",
-        lg: "px-6 py-3 gap-3 text-lg",
-        xl: "px-6 py-4 gap-4 text-xl",
+        sm: "px-3 min-w-16 h-8 gap-2 text-sm",
+        md: "px-4 min-w-20 h-10 gap-2 text-base",
+        lg: "px-6 min-w-24 h-12 gap-3 text-lg",
+        xl: "px-6 min-w-28 h-14 gap-4 text-xl",
       },
       radius: {
         none: "rounded-none",
@@ -59,6 +59,21 @@ const buttonStyles = cva(
         success: "bg-green-500 text-white",
         warning: "bg-yellow-500 text-white",
         danger: "bg-red-500 text-white",
+      },
+      isDisabled: {
+        true: "opacity-50 pointer-events-none",
+      },
+      isIconOnly: {
+        true: "px-0 !gap-0",
+        false: "",
+      },
+      isLoading: {
+        true: "pointer-events-none",
+        false: "",
+      },
+      disableAnimation: {
+        true: "",
+        false: "",
       },
     },
     compoundVariants: [
@@ -130,6 +145,7 @@ const buttonStyles = cva(
         color: "danger",
         className: "text-red-500 bg-transparent hover:bg-red-100",
       },
+
       // Flat
       {
         variant: "flat",
@@ -166,6 +182,7 @@ const buttonStyles = cva(
         color: "danger",
         className: "text-red-700 bg-transparent bg-red-200 hover:bg-red-100",
       },
+
       // Faded
       {
         variant: "faded",
@@ -197,6 +214,7 @@ const buttonStyles = cva(
         color: "danger",
         className: "text-red-500 bg-red-200",
       },
+
       // Shadow
       {
         variant: "shadow",
@@ -228,6 +246,7 @@ const buttonStyles = cva(
         color: "danger",
         className: "shadow-red-500 shadow-lg",
       },
+
       // Ghost
       {
         variant: "ghost",
@@ -265,6 +284,46 @@ const buttonStyles = cva(
         className:
           "text-red-500 border-red-500 bg-transparent hover:bg-red-500 hover:text-white",
       },
+
+      // Is Icon Only
+      {
+        isIconOnly: true,
+        size: "sm",
+        class: "min-w-8 w-8 h-8",
+      },
+      {
+        isIconOnly: true,
+        size: "md",
+        class: "min-w-10 w-10 h-10",
+      },
+      {
+        isIconOnly: true,
+        size: "lg",
+        class: "min-w-12 w-12 h-12",
+      },
+      {
+        isIconOnly: true,
+        size: "xl",
+        class: "min-w-16 w-16 h-16",
+      },
+
+      // Is Loading
+      {
+        isLoading: true,
+        className:
+          "opacity-50 cursor-default !transition-none active:scale-100",
+      },
+
+      // Disable Animation
+      {
+        disableAnimation: true,
+        className: "!transition-none active:scale-100",
+      },
+      {
+        disableAnimation: false,
+        className:
+          "transition-transform-colors-opacity motion-reduce:transition-none active:scale-[0.97]",
+      },
     ],
     defaultVariants: {
       variant: "solid",
@@ -277,10 +336,7 @@ const buttonStyles = cva(
 
 export type ButtonProps<C extends React.ElementType> =
   PolymorphicComponentPropsWithRef<C, VariantProps<typeof buttonStyles>> & {
-    isDisabled?: boolean;
-    isIconOnly?: boolean;
     disableRipple?: boolean;
-    disableAnimation?: boolean;
     isLoading?: boolean;
     spinnerPlacement?: "start" | "end";
     spinner?: React.ReactNode;
@@ -331,10 +387,18 @@ export const Button = forwardRef(
       <Component
         ref={ref}
         {...props}
-        disabled={isDisabled}
         className={cn(
-          buttonStyles({ variant, size, radius, color, className }),
-          !disableAnimation && !isDisabled && `active:scale-[0.97]`
+          buttonStyles({
+            variant,
+            size,
+            radius,
+            color,
+            isDisabled,
+            isIconOnly,
+            isLoading,
+            disableAnimation,
+            className,
+          })
         )}
         onClick={handleClick}
       >
